@@ -16,20 +16,38 @@ import pandas as pd
 
 
 def predictionfunction():
-    symbol_details=pd.read_csv('/home/ubuntu/stockguru/letstry-/stock_api/sentimentor/company.csv')
+    symbol_details=pd.read_csv('/home/ubuntu/stonks/stonks/stock_api/sentimentor/company.csv')
 
     sym=symbol_details['symbol']
+    #print(len(sym))
+    #sym=["AAPL","MSFT","BA","TSLA","AMZN","AAPL"]
+    for i in range(20,len(sym)):
+      #predictor(sym[i])
+      try:
+        model_path="/home/ubuntu/stonks/stonks/stock_api/all_instances/"+sym[i]+".h5"
+        #print(i)
+        #print(model_path)
+        
 
-    for i in range(len(sym)):
-      predictor(sym[i])
+
+        predictor(model_path,sym[i])
+      except:
+        ++i
+        model_path="/home/ubuntu/stonks/stonks/stock_api/all_instances/"+sym[i]+".h5"
+        #print("inside exception")
+        #print(i)
+        #print(model_path)
+
+        predictor(model_path,sym[i])
+
+      
 
 
 
-def predictor(sym):
-    model_path="/home/ubuntu/stockguru/letstry-/stock_api/all_instances/"+sym+".h5"
+def predictor(model_path,sym):
     print(model_path)
+    print(sym)
     end_date=date.today()
-
 
     new_model = load_model(model_path, custom_objects={
     'Adam': lambda **kwargs: hvd.DistributedOptimizer(keras.optimizers.Adam(**kwargs))
@@ -63,9 +81,9 @@ def predictor(sym):
     X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))#Get the predicted scaled price
     pred_price = new_model.predict(X_test)#undo the scaling 
     pred_price = scaler.inverse_transform(pred_price)
-    print(pred_price)
-    print(sym)
-    #save_to_database(sym,pred_price)
+    #print(pred_price)
+    #print(sym)
+    save_to_database(sym,pred_price)
 
 def save_to_database(sym,pred_price):
 
@@ -75,7 +93,4 @@ def save_to_database(sym,pred_price):
     )
     predictor_symbol.save(force_insert=True)
 
-
-predictionfunction()
-
-
+#predictionfunction()

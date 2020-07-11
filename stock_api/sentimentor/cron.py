@@ -1,6 +1,9 @@
 #importing all the libs
 import nltk
-#nltk.download('twitter_samples')
+nltk.download('twitter_samples')
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('wordnet')
 from nltk.stem.wordnet import WordNetLemmatizer
 from nltk.corpus import twitter_samples, stopwords
 from nltk.tag import pos_tag
@@ -103,7 +106,7 @@ def sentiment():
     
     #all_news_data_combine=market_watch_str+daily_fx_str+yahoo_fin_str+investors_business_str+ect_times_str
     
-    #print(sentiment)
+    #print(sentiment_)
 
 
 
@@ -114,7 +117,7 @@ def sentiment():
 #This function is especially used to get the news specific to a ticker
 def ticker_yahoo():
 
-    symbol_details=pd.read_csv('/home/ubuntu/stockguru/letstry-/stock_api/sentimentor/company.csv')
+    symbol_details=pd.read_csv('/home/ubuntu/stonks/stonks/stock_api/sentimentor/company.csv')
 
     sym=symbol_details['symbol']
 
@@ -146,14 +149,11 @@ def ticker_yahoo():
         elif sentiment_ticker=="Negative":
             value="Bearish"
         
-        
+        #print(sym[i])
+        #print(value)
         store_score_ticker(sym[i],value)
 
     
-
-
-
-
 
     
     
@@ -176,7 +176,8 @@ def score(sentiment_score):
     else :
         sentiment="No effect"
 
-    store_score_general(sentiment)
+    #store_score_general(sentiment)
+    #print(sentiment)
 
 #store general sentiment score
 def store_score_general(sentiment):
@@ -188,12 +189,16 @@ def store_score_general(sentiment):
 
 #store sentiment score of a specific ticker in to database
 def store_score_ticker(ticker,value):
-    score=Tickersentiment(
-        sym_name=ticker,
-        sentiment=value
+    #print(ticker)
+    #print("abc")
+    #print(value)
+    
+    ticker_symbol=Tickersentiment(
+      sym_name=ticker,
+      sentiment=value
     )
+    ticker_symbol.save(force_insert=True)
 
-    score.save(force_insert=True)
 
 
 
@@ -289,9 +294,6 @@ def string_convert_new(news_data):
 	str_news = ' '.join([str(item) for item in news_data ])
 	return str_news
 
-
-
-
-
-
+#sentiment()
+#ticker_yahoo()
 
