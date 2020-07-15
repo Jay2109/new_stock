@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
-from .models import Sentimentor,Tickersentiment
+from .models import Sentimental,Tickersentiment
 from .serializers import Sentimentorserializer,Tickerserializer
 
 # Create your views here.
@@ -10,8 +10,8 @@ from .serializers import Sentimentorserializer,Tickerserializer
 
 def sentiment_data(request):
     try:
-        sentimentor_data=Sentimentor.objects.last()
-    except Sentimentor.DoesNotExist:
+        sentimentor_data=Sentimental.objects.last()
+    except Sentimental.DoesNotExist:
         return HttpResponse(status=404)
     
     if request.method=="GET":

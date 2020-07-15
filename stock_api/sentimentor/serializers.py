@@ -1,9 +1,10 @@
 from rest_framework import serializers
-from sentimentor.models import Sentimentor,Tickersentiment
+from sentimentor.models import Sentimental,Tickersentiment
+
 
 class Sentimentorserializer(serializers.ModelSerializer):
     class Meta:
-        model=Sentimentor
+        model=Sentimental
         fields="__all__"
 
 

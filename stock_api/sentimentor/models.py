@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 
 
-class Sentimentor(models.Model):
+class Sentimental(models.Model):
     created=models.DateTimeField(auto_now_add=True)
     general_sentiment=models.CharField(max_length=15)
 

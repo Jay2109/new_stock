@@ -25,7 +25,7 @@ SECRET_KEY = 'to#idrv$ij+7s(um^0qf_7k1ojosoaesb82n+5n&j=n*pjs75r'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['13.57.10.46']
+ALLOWED_HOSTS = ['13.56.227.206']
 
 
 # Application definition
@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'predictor',
     'sentimentor',
     'django_crontab',
-    'djoser',
     'corsheaders',
     
 ]
@@ -87,7 +86,7 @@ WSGI_APPLICATION = 'stock_api.wsgi.application'
 DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'test_new',
+            'NAME': 'stocks',
             'USER': 'admin',
             'PASSWORD': 'admin123',
             'HOST': 'stocktest.cvaajegaxukp.us-east-1.rds.amazonaws.com',
@@ -136,8 +135,8 @@ STATIC_URL = '/static/'
 
 
 CRONJOBS=[
-    ('0 20 * * *', 'predictor.cron.predictionfunction'),
-    ('*/15 * * * *', 'sentimentor.cron.ticker_yahoo'),
-    ('0 20 * * *', 'sentimentor.cron.sentiment'),
+    ('50 17 * * *', 'predictor.cron.predictionfunction'),
+    ('00 17 * * *', 'sentimentor.cron.ticker_yahoo'),
+    ('50 16 * * *', 'sentimentor.cron.sentiment'),
 ]
 
