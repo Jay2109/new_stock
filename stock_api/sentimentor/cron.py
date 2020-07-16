@@ -10,15 +10,13 @@ from nltk.tag import pos_tag
 from nltk.tokenize import word_tokenize
 from nltk import FreqDist, classify, NaiveBayesClassifier
 import pandas as pd
-
-from sentimentor.models import Sentimental,Tickersentiment
-
-
 import re, string, random
 import joblib
 
 from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup
+from .models import Sentimental,Tickersentiment
+
 
 #NLP PART cleaning the data 
 
@@ -117,7 +115,7 @@ def sentiment():
 #This function is especially used to get the news specific to a ticker
 def ticker_yahoo():
 
-    symbol_details=pd.read_csv('/home/ubuntu/stonks/stonks/stock_api/sentimentor/company.csv')
+    symbol_details=pd.read_csv('company.csv')
 
     sym=symbol_details['symbol']
 
@@ -182,10 +180,14 @@ def score(sentiment_score):
 #store general sentiment score
 def store_score_general(sentiment):
     #print(sentiment)
-    score=Sentimental(
-      general_sentiment=sentiment
-    )
-    score.save(force_insert=True)
+
+    try:
+        score=Sentimental(
+        general_sentiment=sentiment
+        )
+        score.save(force_insert=True)
+    except Exception as e:
+        print("error"+e)
 
 #store sentiment score of a specific ticker in to database
 def store_score_ticker(ticker,value):
@@ -193,12 +195,17 @@ def store_score_ticker(ticker,value):
     #print("abc")
     #print(value)
     
-    ticker_symbol=Tickersentiment(
-      sym_name=ticker,
-      sentiment=value
-    )
-    ticker_symbol.save(force_insert=True)
-
+    try:
+        ticker_symbol=Tickersentiment(
+        sym_name=ticker,
+        sentiment=value
+        )
+        ticker_symbol.save(force_insert=True)
+    except Exception as e:
+        
+        f = open("errorlog.txt", "w")
+        f.append(e)
+        f.close()
 
 
 
@@ -294,5 +301,5 @@ def string_convert_new(news_data):
 	return str_news
 
 #sentiment()
-#ticker_yahoo()
+ticker_yahoo()
 

@@ -25,7 +25,7 @@ SECRET_KEY = 'to#idrv$ij+7s(um^0qf_7k1ojosoaesb82n+5n&j=n*pjs75r'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['13.56.227.206']
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
@@ -41,9 +41,10 @@ INSTALLED_APPS = [
     'predictor',
     'sentimentor',
     'django_crontab',
-    'corsheaders',
+   
     
 ]
+ #'corsheaders',
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -53,12 +54,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
+    
     'django.middleware.common.BrokenLinkEmailsMiddleware',
     'django.middleware.common.CommonMiddleware',
 ]
-
-CORS_ORIGIN_ALLOW_ALL = True
+#'corsheaders.middleware.CorsMiddleware',
+#CORS_ORIGIN_ALLOW_ALL = True
 ROOT_URLCONF = 'stock_api.urls'
 
 TEMPLATES = [
@@ -135,8 +136,8 @@ STATIC_URL = '/static/'
 
 
 CRONJOBS=[
-    ('50 17 * * *', 'predictor.cron.predictionfunction'),
-    ('00 17 * * *', 'sentimentor.cron.ticker_yahoo'),
-    ('50 16 * * *', 'sentimentor.cron.sentiment'),
+    #('17 16 * * *', 'predictor.cron.predictionfunction','>> /tmp/prediction.log'),
+    ('*/35 * * * *', 'sentimentor.cron.ticker_yahoo','>> /tmp/home/jay/stonks/new_stock/stock_api/sentimentor_ticker.log'),
+    #('*/1 * * * *', 'sentimentor.cron.sentiment','>> /tmp/sentimentor.log'),
 ]
 
