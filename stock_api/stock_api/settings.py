@@ -25,7 +25,7 @@ SECRET_KEY = 'to#idrv$ij+7s(um^0qf_7k1ojosoaesb82n+5n&j=n*pjs75r'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['ec2-54-184-124-11.us-west-2.compute.amazonaws.com']
+ALLOWED_HOSTS = ['13.56.227.206']
 
 
 # Application definition
@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'predictor',
     'sentimentor',
     'django_crontab',
-    'djoser',
+    'corsheaders',
     
 ]
 
@@ -53,8 +53,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.BrokenLinkEmailsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
+CORS_ORIGIN_ALLOW_ALL = True
 ROOT_URLCONF = 'stock_api.urls'
 
 TEMPLATES = [
@@ -82,7 +86,7 @@ WSGI_APPLICATION = 'stock_api.wsgi.application'
 DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'stocks_new',
+            'NAME': 'stocks',
             'USER': 'admin',
             'PASSWORD': 'admin123',
             'HOST': 'stocktest.cvaajegaxukp.us-east-1.rds.amazonaws.com',
@@ -131,8 +135,8 @@ STATIC_URL = '/static/'
 
 
 CRONJOBS=[
-    ('*/1 * * * *', 'predictor.cron.predictionfunction'),
-    ('*/1 * * * *', 'sentimentor.cron.ticker_yahoo'),
-    ('*/1 * * * *', 'sentimentor.cron.sentiment'),
+    ('50 17 * * *', 'predictor.cron.predictionfunction'),
+    ('00 17 * * *', 'sentimentor.cron.ticker_yahoo'),
+    ('50 16 * * *', 'sentimentor.cron.sentiment'),
 ]
 

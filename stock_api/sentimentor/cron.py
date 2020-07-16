@@ -1,6 +1,9 @@
 #importing all the libs
 import nltk
-#nltk.download('twitter_samples')
+nltk.download('twitter_samples')
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('wordnet')
 from nltk.stem.wordnet import WordNetLemmatizer
 from nltk.corpus import twitter_samples, stopwords
 from nltk.tag import pos_tag
@@ -8,7 +11,7 @@ from nltk.tokenize import word_tokenize
 from nltk import FreqDist, classify, NaiveBayesClassifier
 import pandas as pd
 
-from sentimentor.models import Sentimentor,Tickersentiment
+from sentimentor.models import Sentimental,Tickersentiment
 
 
 import re, string, random
@@ -103,7 +106,7 @@ def sentiment():
     
     #all_news_data_combine=market_watch_str+daily_fx_str+yahoo_fin_str+investors_business_str+ect_times_str
     
-    #print(sentiment)
+    #print(sentiment_)
 
 
 
@@ -114,7 +117,7 @@ def sentiment():
 #This function is especially used to get the news specific to a ticker
 def ticker_yahoo():
 
-    symbol_details=pd.read_csv('/home/ubuntu/stockguru/letstry-/stock_api/sentimentor/company.csv')
+    symbol_details=pd.read_csv('/home/ubuntu/stonks/stonks/stock_api/sentimentor/company.csv')
 
     sym=symbol_details['symbol']
 
@@ -124,7 +127,7 @@ def ticker_yahoo():
         req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
         webpage = urlopen(req).read()
         #print(url)
-        soup = BeautifulSoup(webpage)
+        soup = BeautifulSoup(webpage,features="lxml")
         
         #title = soup.find_all('li',class_='js-stream-content')
         #text_title=[f.get_text() for f in title]
@@ -146,14 +149,11 @@ def ticker_yahoo():
         elif sentiment_ticker=="Negative":
             value="Bearish"
         
-        
+        #print(sym[i])
+        #print(value)
         store_score_ticker(sym[i],value)
 
     
-
-
-
-
 
     
     
@@ -177,23 +177,27 @@ def score(sentiment_score):
         sentiment="No effect"
 
     store_score_general(sentiment)
+    #print(sentiment)
 
 #store general sentiment score
 def store_score_general(sentiment):
-
-    score=Sentimentor(
+    #print(sentiment)
+    score=Sentimental(
       general_sentiment=sentiment
     )
     score.save(force_insert=True)
 
 #store sentiment score of a specific ticker in to database
 def store_score_ticker(ticker,value):
-    score=Tickersentiment(
-        sym_name=ticker,
-        sentiment=value
+    #print(ticker)
+    #print("abc")
+    #print(value)
+    
+    ticker_symbol=Tickersentiment(
+      sym_name=ticker,
+      sentiment=value
     )
-
-    score.save(force_insert=True)
+    ticker_symbol.save(force_insert=True)
 
 
 
@@ -212,7 +216,7 @@ def market_watch():
     req = Request("https://www.marketwatch.com/latest-news?mod=side_nav",
                   headers={'User-Agent': 'Mozilla/5.0'})
     webpage = urlopen(req).read()
-    soup = BeautifulSoup(webpage)
+    soup = BeautifulSoup(webpage,features="lxml")
 
     title = soup.find_all('h3', class_='article__headline')
     text_title = [f.get_text() for f in title]
@@ -224,7 +228,7 @@ def daily_fx():
     req = Request("https://www.dailyfx.com/market-news",
                   headers={'User-Agent': 'Mozilla/5.0'})
     webpage = urlopen(req).read()
-    soup = BeautifulSoup(webpage)
+    soup = BeautifulSoup(webpage,features="lxml")
 
     title = soup.find_all('p', class_='dfx-articleHero__text')
     text_title = [f.get_text() for f in title]
@@ -241,7 +245,7 @@ def investors_business():
     req = Request("https://www.investors.com/news/",
                   headers={'User-Agent': 'Mozilla/5.0'})
     webpage = urlopen(req).read()
-    soup = BeautifulSoup(webpage)
+    soup = BeautifulSoup(webpage,features="lxml")
 
     title = soup.find_all('h4')
     text_title = [f.get_text() for f in title]
@@ -258,7 +262,7 @@ def ect_times():
     req = Request("https://economictimes.indiatimes.com/markets/stocks/news",
                   headers={'User-Agent': 'Mozilla/5.0'})
     webpage = urlopen(req).read()
-    soup = BeautifulSoup(webpage)
+    soup = BeautifulSoup(webpage,features="lxml")
 
     title = soup.find_all('h3')
     text_title = [f.get_text() for f in title]
@@ -269,7 +273,7 @@ def yahoo_fin():
     req = Request("https://finance.yahoo.com/quote/%5EGSPC/",
                   headers={'User-Agent': 'Mozilla/5.0'})
     webpage = urlopen(req).read()
-    soup = BeautifulSoup(webpage)
+    soup = BeautifulSoup(webpage,features="lxml")
 
     title = soup.find_all('li', class_='js-stream-content')
     text_title = [f.get_text() for f in title]
@@ -289,9 +293,6 @@ def string_convert_new(news_data):
 	str_news = ' '.join([str(item) for item in news_data ])
 	return str_news
 
-
-
-
-
-
+#sentiment()
+#ticker_yahoo()
 

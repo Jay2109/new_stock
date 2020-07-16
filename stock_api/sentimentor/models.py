@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 
 
-class Sentimentor(models.Model):
+class Sentimental(models.Model):
     created=models.DateTimeField(auto_now_add=True)
     general_sentiment=models.CharField(max_length=15)
 
@@ -12,8 +12,8 @@ class Sentimentor(models.Model):
 
 class Tickersentiment(models.Model):
     created=models.DateTimeField(auto_now_add=True)
-    sym_name=models.CharField(max_length=12)
-    sentiment=models.CharField(max_length=15)
+    sym_name=models.CharField(max_length=20)
+    sentiment=models.CharField(max_length=20)
 
     def __str__(self):
         return self.sym_name
